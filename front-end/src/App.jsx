@@ -1,32 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import HeaderComp from './components/headerComp';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div className="App dark-mode">
+      <header>
+        <HeaderComp />
+      </header>
+      <main>
+        <div className="serice-card">
+          <div className="service-card__image"><a href=""><img src="/images/TAN_1894.jpg" alt="" width="100%" /></a></div>
+          <div className="service-card__text">
+            <div className="service-card__category"><a href=""><span>Studio Shooting</span></a></div>
+            <div className="service-card__header-text">
+              <div className="service-card__title"><h3>Solo Shooting Woman</h3></div>
+              <div className="service-card__start-price"><span>Starting at 5,000 F</span></div>
+            </div>
+            <div className="service-card__desc-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, similique!</div>
+            <div className="service-card__cta"><a href="">Learn More</a></div>
+          </div>
+        </div>
+      </main>
     </div>
   )
 }
