@@ -28,19 +28,20 @@
 
 /* GLOBAL HEADER */
 
-
-header:hover {
-  box-shadow: 1px 2px 8px rgba(0, 0, 0, .1);
-}
-
 .header-container {
-  padding: 24px 5%;
+  padding: 8px 5%;
+  width: 90%;
   border-bottom: var(--light-mode-thin-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
+  background-color: var(--almost-white);
+  position: fixed;
   z-index: 1;
+}
+
+.header-container:hover {
+  box-shadow: 1px 2px 8px rgba(0, 0, 0, .1);
 }
 
 .header-logo {
@@ -56,18 +57,32 @@ header:hover {
   font-size: 24px;
 }
 
-.hidden-header {
-  position: absolute;
-  width: 100%;
-  max-width: 400px;
-  right: 0px;
-  top: -100%;
+.header-icons__btn {
+  background: none;
+  border: none;
+  color: var(--dark-grey);
+  width: 35px;
+  cursor: pointer;
+}
+
+.header-icons__btn-content {
+  font-family: FontAwesome;
+  font-size: 24px;
+}
+
+.nav-trigger-icon .header-icons__btn-content::before {
+  content: "\f0c9";
   transition: all .5s ease-in-out;
 }
 
-.hidden-header.visible {
-  top: 90px;
-  transition: none;
+.hidden-header {
+  position: fixed;
+  width: 100%;
+  max-width: 300px;
+  right: 0px;
+  top: -100%;
+  border-top: 3px solid var(--tanteta-brown);
+  transition: all .5s ease-in-out;
 }
 
 .nav-container {
@@ -78,10 +93,74 @@ header:hover {
   background-color: var(--almost-white);
 }
 
+
+/* OVERRIDE HEADER STYLE WHEN HIDDEN MENU IS VISIBLE */
+
+.visible .header-container {
+  z-index: 0;
+  transition-delay: .6s;
+}
+
+.visible .hidden-header {
+  top: 56px;
+  /* transition: none; */
+}
+
+.visible .header-icons__btn {
+  color: var(--tanteta-brown);
+}
+
+.visible .nav-trigger-icon .header-icons__btn-content::before {
+  content: "\f00d";
+  content: "\58";
+}
+
+
+/* HIDDEN MENU STYE */
+
+.darkmode-toggle-container {
+  display: flex;
+  gap: 8px;
+}
+
+.darkmode-toggle__label {
+  opacity: .5;
+  cursor: pointer;
+  transition: all .5s ease-in-out;
+  display: inline-flex;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: var(--light-grey);
+}
+
+.darkmode-toggle__label:hover {
+  opacity: 1;
+}
+
+.darkmode-toggle-container input {
+  display: none;
+}
+
+.darkmode-toggle-container input:checked+.darkmode-toggle__label {
+  opacity: 1;
+  background-color: var(--tanteta-brown);
+}
+
+.darkmode-toggle-container input:checked+.darkmode-toggle__label img {
+  filter: invert(1);
+}
+
+.darkmode-toggle__img-icon {
+  width: 32px;
+}
+
+
+
+
 /* GLOBAL MAIN */
 
 main {
-  padding: 5%;
+  padding: 60px 5%;
 }
 
 /* SERVICE CARDS */
@@ -180,9 +259,25 @@ main {
   background-color: var(--almost-black);
 }
 
+.dark-mode .header-icons__btn {
+  color: var(--light-grey);
+}
+
+.dark-mode .visible .header-icons__btn {
+  color: var(--tanteta-brown);
+}
+
 .dark-mode .nav-container {
   background-color: var(--almost-black);
   border-bottom: var(--dark-mode-thin-border);
+}
+
+.dark-mode .darkmode-toggle__label {
+  opacity: .25;
+}
+
+.dark-mode .darkmode-toggle__label:hover {
+  opacity: 1;
 }
 
 .dark-mode .serice-card:hover {
