@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from './pages/homePage';
+import BookPage from './pages/bookPage';
 import HeaderComp from './components/headerComp';
 import './App.css';
 
@@ -35,6 +36,7 @@ function App() {
 				<main>
 					<Routes>
 						<Route path='/' element={<HomePage />} />
+						<Route path='/book' element={<BookPage />} />
 					</Routes>
 				</main>
 			</div>

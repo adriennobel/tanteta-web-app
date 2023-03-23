@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const HeaderComp = ({ toggleDarkmodeState }) => {
 
@@ -12,7 +13,13 @@ const HeaderComp = ({ toggleDarkmodeState }) => {
 
     // detect clicks on the whole app when hidden header menu is viible and close it when click is out of it
     window.onclick = function (e) {
-        if (!document.getElementById('hidden-header-id').contains(e.target) && !document.getElementById('nav-trigger-icon-id').contains(e.target)) {
+        document.querySelectorAll('.nav-menu-container a').forEach(element => {
+            if (e.target == element) {
+                setNavmenuState(false);
+            }
+        });
+        if (!document.getElementById('hidden-header-id').contains(e.target)
+            && !document.getElementById('nav-trigger-icon-id').contains(e.target)) {
             setNavmenuState(false);
         }
     };
@@ -25,7 +32,9 @@ const HeaderComp = ({ toggleDarkmodeState }) => {
                 </div>
                 <div className="header-icons-container">
                     <div className="account-icon"><i className="fa-regular fa-circle-user"></i></div>
-                    <div onClick={toggleNavmenuState} className="nav-trigger-icon" id="nav-trigger-icon-id"><button className="header-icons__btn"><span className="header-icons__btn-content"></span></button></div>
+                    <div onClick={toggleNavmenuState} className="nav-trigger-icon" id="nav-trigger-icon-id">
+                        <button className="header-icons__btn"><span className="header-icons__btn-content"></span></button>
+                    </div>
                 </div>
             </div>
             <div className="hidden-header" id="hidden-header-id" >
@@ -33,10 +42,10 @@ const HeaderComp = ({ toggleDarkmodeState }) => {
                     <div className="nav-menu-container">
                         <nav>
                             <ul>
-                                <li>Home</li>
-                                <li>Services</li>
-                                <li>Blog</li>
-                                <li>Contact US</li>
+                                <li><Link to="/">Home</Link></li>
+                                <li><Link to="/">Services</Link></li>
+                                <li><Link to="/">Blog</Link></li>
+                                <li><Link to="/">Contact US</Link></li>
                             </ul>
                         </nav>
                     </div>
