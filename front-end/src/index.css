@@ -95,6 +95,8 @@
   gap: 32px;
   padding: 24px 5%;
   background-color: var(--almost-white);
+  border-bottom: var(--light-mode-thin-border);
+  border-left: var(--light-mode-thin-border);
 }
 
 
@@ -103,6 +105,7 @@
 .visible .header-container {
   z-index: 0;
   transition-delay: .6s;
+  transition-property: z-index;
 }
 
 .visible .hidden-header {
@@ -164,7 +167,7 @@
 /* GLOBAL MAIN */
 
 main {
-  padding: 60px 5%;
+  padding: 72px 5%;
 }
 
 /* SERVICE CARDS */
@@ -271,84 +274,176 @@ main {
 
 /* BOOK PAGE */
 
+.book-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
-.book-category__dropdown-bar {
+.book-question-dropdown-bar__wrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px;
-  min-height: 40px;
+  padding: 8px 16px;
+  /* min-height: 40px; */
   border: var(--light-mode-thin-border);
   background-color: white;
   cursor: pointer;
 }
 
-.book-category__dropdown-bar:hover {
+.book-question-dropdown-bar__wrap:hover {
   box-shadow: var(--light-mode-hover-shaddow-1);
 }
 
-.book-category__dropdown-bar-text {
-  flex: 4;
-}
-
-.book-category__dropdown-bar-icon {
+.book-question-dropdown-bar__icon {
   font-size: 24px;
-  flex: 1;
   display: flex;
   justify-content: center;
 }
 
-.book-category__dropdown-bar:hover .book-category__dropdown-bar-icon {
+.book-question-dropdown-bar__wrap:hover .book-question-dropdown-bar__icon {
   color: var(--tanteta-brown);
 }
 
-.book-category__dropdown-options {
+.book-question-dropdown-options {
   border: solid var(--light-grey);
-  border-width: 0 2px 2px;
+  border-width: 0 2px;
   height: 00px;
   overflow: auto;
   background-color: white;
-  transition: all .5s ease-in-out;
+  transition: height .5s ease-in-out;
 }
 
-.book-category__dropdown-options.clicked {
+.book-question-dropdown-options.clicked {
   height: 240px;
+  border: solid var(--light-grey);
+  border-width: 0 2px 2px;
 }
 
-.book-category__container {
+.book-question-dropdown-option__wrap {
   border-bottom: 1px solid var(--light-grey);
 }
 
-.book-category__container:hover {
+.book-question-dropdown-option__wrap:hover {
   background-color: var(--almost-white);
 }
 
-.book-category__container input {
+.book-question-dropdown-option__wrap:last-child {
+  border: none;
+}
+
+.book-question-dropdown-option__wrap input {
   display: none;
   position: absolute;
 }
 
-.book-category__label-container {
+.book-question-dropdown-option__label-wrap {
   display: flex;
   align-items: center;
-  padding: 8px;
+  padding: 8px 16px;
   cursor: pointer;
 }
 
-.book-category__option-image {
+.book-question-dropdown-option__label-img {
   flex: 1;
 }
 
-.book-category__option-text {
+.book-question-dropdown-option__label-text {
   flex: 4;
 }
 
-.book-category__option-image img {
+.book-question-dropdown-option__label-img img {
   aspect-ratio: 1;
   object-fit: cover;
   display: flex;
+  max-height: 64px;
 }
 
+
+.book-details__wrap {
+  background-color: white;
+  border: var(--light-mode-thin-border);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.book-details-person {
+  border: var(--light-mode-thin-border);
+}
+
+.book-details-person__header {
+  background-color: var(--almost-white);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.book-details-person__header-icon::before {
+  font-family: FontAwesome;
+  content: "\f068";
+}
+
+.hidden .book-details-person__header-icon::before {
+  content: "\f067";
+}
+
+.book-details-person__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 16px 16px;
+}
+
+.hidden>.book-details-person__body {
+  height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+:not(.hidden)>.book-details-person__body {
+  border-top: 2px solid var(--light-grey);
+}
+
+.book-details-person__text ul {
+  padding: 0;
+  list-style-position: inside;
+  list-style-type: none;
+}
+
+.book-details-person__text li::before {
+  font-family: FontAwesome;
+  content: "\f061";
+  margin-right: 8px;
+}
+
+.book-details-person__edit-btn button {
+  text-decoration: none;
+  background-color: var(--tanteta-brown);
+  border: 2px solid var(--tanteta-brown);
+  color: white;
+  cursor: pointer;
+  font-size: initial;
+}
+
+.book-details-person__edit-btn button::before {
+  font-family: 'FontAwesome';
+  content: "\f304";
+  margin-right: 8px;
+}
+
+.book-details-total-cost__btn button {
+  background-color: var(--tanteta-brown);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: initial;
+  cursor: pointer;
+}
 
 
 
@@ -376,6 +471,7 @@ main {
 .dark-mode .nav-container {
   background-color: var(--almost-black);
   border-bottom: var(--dark-mode-thin-border);
+  border-left: var(--dark-mode-thin-border);
 }
 
 .dark-mode .darkmode-toggle__label {
@@ -418,25 +514,52 @@ main {
 }
 
 
-.dark-mode .book-category__dropdown-bar {
+.dark-mode .book-question-dropdown-bar__wrap {
   border: var(--dark-mode-thin-border);
   background-color: var(--very-dark-grey);
 }
 
-.dark-mode .book-category__dropdown-bar:hover {
+.dark-mode .book-question-dropdown-bar__wrap:hover {
   box-shadow: var(--dark-mode-hover-shaddow-1);
 }
 
-.dark-mode .book-category__dropdown-options {
+.dark-mode .book-question-dropdown-option__wrap:last-child {
+  border: none;
+}
+
+.dark-mode .book-question-dropdown-options {
   background-color: var(--very-dark-grey);
+  border: solid var(--dark-grey);
+  border-width: 0 2px;
+}
+
+.dark-mode .book-question-dropdown-options.clicked {
+  height: 240px;
   border: solid var(--dark-grey);
   border-width: 0 2px 2px;
 }
 
-.dark-mode .book-category__container {
+.dark-mode .book-question-dropdown-option__wrap {
   border-bottom: 1px solid var(--dark-grey);
 }
 
-.dark-mode .book-category__container:hover {
+.dark-mode .book-question-dropdown-option__wrap:hover {
   background-color: var(--almost-black);
+}
+
+.dark-mode .book-details__wrap {
+  background-color: var(--very-dark-grey);
+  border: var(--dark-mode-thin-border);
+}
+
+.dark-mode .book-details-person {
+  border: var(--dark-mode-thin-border);
+}
+
+.dark-mode .book-details-person__header {
+  background-color: var(--almost-black);
+}
+
+.dark-mode :not(.hidden)>.book-details-person__body {
+  border-top: 2px solid var(--dark-grey);
 }
