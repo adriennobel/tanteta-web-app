@@ -7,7 +7,8 @@ const serviceObject = [
         products: [{
             name: "Solo (1 Person)",
             image: "/images/TAN_9628.jpg",
-            starting: 5000
+            starting: 5000,
+            dedphotos: 2,
         }, {
             name: "Duo (2 People)",
             image: "/images/TAN_9628.jpg",
@@ -100,7 +101,7 @@ const serviceObject = [
     },
     {
         name: "Prints & Frames",
-        image: "link",
+        image: "/images/TAN_2761.jpg",
         slug: "prints-frames",
         products: [{
             name: "",

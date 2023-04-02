@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const HeaderComp = ({ toggleDarkmodeState }) => {
@@ -13,7 +13,7 @@ const HeaderComp = ({ toggleDarkmodeState }) => {
 
     // detect clicks on the whole app when hidden header menu is viible and close it when click is out of it
     window.onclick = function (e) {
-        document.querySelectorAll('.nav-menu-container a').forEach(element => {
+        document.querySelectorAll('a').forEach(element => {
             if (e.target == element) {
                 setNavmenuState(false);
             }
@@ -50,10 +50,14 @@ const HeaderComp = ({ toggleDarkmodeState }) => {
                         </nav>
                     </div>
                     <div className="darkmode-toggle-container">
-                        <input type="radio" name="darkmode-toggle" id="darkmode-toggle-dark" />
-                        <label htmlFor="darkmode-toggle-dark" className="darkmode-toggle__label" onClick={toggleDarkmodeState}><img className="darkmode-toggle__img-icon" src="/icons/moon.png" alt="dark mode icon" /></label>
-                        <input type="radio" name="darkmode-toggle" id="darkmode-toggle-light" />
-                        <label htmlFor="darkmode-toggle-light" className="darkmode-toggle__label" onClick={toggleDarkmodeState}><img className="darkmode-toggle__img-icon" src="/icons/brightness.png" alt="light mode icon" /></label>
+                        <input type="radio" name="darkmode-toggle" id="darkmode-toggle-dark" onChange={toggleDarkmodeState} />
+                        <label htmlFor="darkmode-toggle-dark" className="darkmode-toggle__label">
+                            <img className="darkmode-toggle__img-icon" src="/icons/moon.png" alt="dark mode icon" />
+                        </label>
+                        <input type="radio" name="darkmode-toggle" id="darkmode-toggle-light" onChange={toggleDarkmodeState} />
+                        <label htmlFor="darkmode-toggle-light" className="darkmode-toggle__label">
+                            <img className="darkmode-toggle__img-icon" src="/icons/brightness.png" alt="light mode icon" />
+                        </label>
                     </div>
                     <div className="language-toggle-container">
                         <select name="language-toggle">

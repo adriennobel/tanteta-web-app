@@ -20,11 +20,12 @@ function App() {
 
 	// check radio button automatically if system dark mode is on
 	useEffect(() => {
-		if (darkmodeState) {
-			document.querySelector('#darkmode-toggle-dark').checked = true;
-		} else {
-			document.querySelector('#darkmode-toggle-light').checked = true;
-		}
+
+		// if (darkmodeState) {
+		// 	document.querySelector('#darkmode-toggle-dark').checked = true;
+		// } else {
+		// 	document.querySelector('#darkmode-toggle-light').checked = true;
+		// }
 	}, []);
 
 	return (
