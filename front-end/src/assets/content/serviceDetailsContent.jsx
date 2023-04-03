@@ -12,19 +12,23 @@ const serviceObject = [
         }, {
             name: "Duo (2 People)",
             image: "/images/TAN_9628.jpg",
-            starting: 10000
+            starting: 10000,
+            dedphotos: 3,
         }, {
             name: "Group (3 or more people)",
             image: "/images/TAN_9628.jpg",
-            starting: 15000
+            starting: 15000,
+            dedphotos: 4,
         }, {
             name: "Baby (Less than 6 y-o)",
             image: "/images/TAN_9628.jpg",
-            starting: 10000
+            starting: 10000,
+            dedphotos: 2,
         }, {
             name: "Pregnancy (1 person)",
             image: "/images/TAN_9628.jpg",
-            starting: 5000
+            starting: 5000,
+            dedphotos: 2,
         }]
     },
     {

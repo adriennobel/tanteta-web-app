@@ -30,7 +30,7 @@ const BookPage = () => {
     let productQuestionDropdownVisbility = productQuestionDropdownState ? "clicked" : "";
 
     // state that controls selection of product dropdown item
-    const [productSelected, setProductSelected] = useState('Select One');
+    let [productSelected, setProductSelected] = useState('Select One');
 
     // variable that updates when states of service & product update and hold object of selected product
     let pdtSeldObject = (serviceSelected != "Select One" && productSelected != "Select One") ?
@@ -41,18 +41,36 @@ const BookPage = () => {
     let personDetailsDropdownVisbility = personDetailsDropdownState ? "" : "hidden";
 
     // state that controls booking details
-    const [edphotos, setEdphotos] = useState(null);
     const [outfits1, setOutfits1] = useState(1);
     const [needsMakeup1, setNeedsMakeup1] = useState(false);
-    const [totalCost, setTotalCost] = useState(null);
+    let makeupcost = needsMakeup1 ? 3000 : 0;
+    const [inclPhotos, setInclPhotos] = useState(0);
+    const [addPhotos, setAddPhotos] = useState(0);
+    let [totalCost, setTotalCost] = useState(0);
 
     useEffect(() => {
-        // initialize book details states once selected product exists
-        pdtSeldObject && setTotalCost(pdtSeldObject.starting);
-    })
+        // initialize book details states once selected product exists and object is found
+        if (pdtSeldObject) {
+            setInclPhotos(pdtSeldObject.dedphotos);
+            setTotalCost(pdtSeldObject.starting);
+        }
+        setOutfits1(1);
+        setNeedsMakeup1(false);
+        setAddPhotos(0);
+    }, [productSelected]);
+
+    useEffect(() => {
+        // calculate total cost based on product selected
+        if (pdtSeldObject) {
+            if (productSelected == "Solo (1 Person)") {
+                setInclPhotos(3 * outfits1 - 1);
+                setTotalCost(pdtSeldObject.starting * outfits1 + addPhotos * 2000 + makeupcost);
+            }
+        }
+    }, [outfits1, needsMakeup1, addPhotos])
 
     // Format prices to local currency.
-    let money = new Intl.NumberFormat('fr-CM', {
+    let money = new Intl.NumberFormat('en-CM', {
         style: 'currency',
         currency: 'XAF',
     });
@@ -128,33 +146,38 @@ const BookPage = () => {
                                 <div className="book-details-person__item-wrap">
                                     <div className="book-details-person__item-label">Number of outfits</div>
                                     <div className="book-details-person__item-controls">
-                                        <button>-</button>
-                                        <span>1</span>
-                                        <button>+</button>
+                                        <button onClick={() => outfits1 > 1 && setOutfits1((count) => count - 1)}>-</button>
+                                        <span>{outfits1}</span>
+                                        <button onClick={() => outfits1 < 10 && setOutfits1((count) => count + 1)}>+</button>
                                     </div>
                                 </div>
                                 <div className="book-details-person__item-wrap">
                                     <div className="book-details-person__item-label">Make-up needed?</div>
                                     <div className="book-details-person__item-controls">
-                                        <input type="radio" name="book-details-person__makeup" id="book-details-person__makeup-no" /><label htmlFor="book-details-person__makeup-no">No</label>
-                                        <input type="radio" name="book-details-person__makeup" id="book-details-person__makeup-yes" /><label htmlFor="book-details-person__makeup-yes">Yes</label>
+                                        <input type="radio" name="book-details-person__makeup" id="book-details-person__makeup-no"
+                                            onChange={() => setNeedsMakeup1(false)} defaultChecked />
+                                        <label htmlFor="book-details-person__makeup-no">No</label>
+                                        <input type="radio" name="book-details-person__makeup" id="book-details-person__makeup-yes"
+                                            onChange={() => setNeedsMakeup1(true)} />
+                                        <label htmlFor="book-details-person__makeup-yes">Yes</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="book-details-edphotos__wrap">
-                            <div className="book-details-edphotos__text">Includes {pdtSeldObject.dedphotos} edited photos</div>
+                            <div className="book-details-edphotos__text">Includes {inclPhotos} edited photos</div>
                             <div className="book-details-person__item-wrap">
                                 <div className="book-details-person__item-label">Add?</div>
                                 <div className="book-details-person__item-controls">
-                                    <button>-</button>
-                                    <span>1</span>
-                                    <button>+</button>
+                                    <button onClick={() => addPhotos > 0 && setAddPhotos((count) => count - 1)}>-</button>
+                                    <span>{addPhotos}</span>
+                                    <button onClick={() => addPhotos < 10 && setAddPhotos((count) => count + 1)}>+</button>
                                 </div>
                             </div>
                         </div>
                         <div className="book-details-general">
                             <div className="book-details-general__total-cost">Total Cost: {money.format(totalCost)}</div>
+                            <div className="book-details-general__total-photos">Total edited photos: {inclPhotos + addPhotos}</div>
                             <div className="book-details-general__btn"><button>Proceed</button></div>
                         </div>
                     </div>
