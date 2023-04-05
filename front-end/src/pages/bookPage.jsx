@@ -37,13 +37,15 @@ const BookPage = () => {
         serviceObject.find(service => service.name == serviceSelected).products.find(product => product.name == productSelected) : "";
 
     // State that controls visibiity of each person's book detail 
-    const [personDetailsDropdownState, setPersonDetailsDropdownState] = useState(true);
-    let personDetailsDropdownVisbility = personDetailsDropdownState ? "" : "hidden";
+    const [person1DropdownState, setPerson1DropdownState] = useState(true);
+    let person1DropdownVisbility = person1DropdownState ? "" : "hidden";
+    const [person2DropdownState, setPerson2DropdownState] = useState(true);
+    let person2DropdownVisbility = person2DropdownState ? "" : "hidden";
 
     // state that controls booking details
-    const [outfits1, setOutfits1] = useState(1);
-    const [needsMakeup1, setNeedsMakeup1] = useState(false);
-    let makeupcost = needsMakeup1 ? 3000 : 0;
+    const [outfits1, setOutfits1] = useState(1), [outfits2, setOutfits2] = useState(1);
+    const [needsMakeup1, setNeedsMakeup1] = useState(false), [needsMakeup2, setNeedsMakeup2] = useState(false);
+    let makeupcost = 0;
     const [inclPhotos, setInclPhotos] = useState(0);
     const [addPhotos, setAddPhotos] = useState(0);
     let [totalCost, setTotalCost] = useState(0);
@@ -54,20 +56,25 @@ const BookPage = () => {
             setInclPhotos(pdtSeldObject.dedphotos);
             setTotalCost(pdtSeldObject.starting);
         }
-        setOutfits1(1);
-        setNeedsMakeup1(false);
+        setOutfits1(1); setOutfits2(1);
+        setNeedsMakeup1(false); setNeedsMakeup2(false);
         setAddPhotos(0);
     }, [productSelected]);
 
     useEffect(() => {
+        needsMakeup1 ? makeupcost += 3000 : null;
+        needsMakeup2 ? makeupcost += 3000 : null;
         // calculate total cost based on product selected
         if (pdtSeldObject) {
             if (productSelected == "Solo (1 Person)") {
                 setInclPhotos(3 * outfits1 - 1);
                 setTotalCost(pdtSeldObject.starting * outfits1 + addPhotos * 2000 + makeupcost);
+            } else if (productSelected == "Duo (2 People)") {
+                setInclPhotos(Math.floor(3 * (outfits1 + outfits2) / 2));
+                setTotalCost(pdtSeldObject.starting * (outfits1 + outfits2) / 2 + addPhotos * 2000 + makeupcost);
             }
         }
-    }, [outfits1, needsMakeup1, addPhotos])
+    }, [outfits1, needsMakeup1, outfits2, needsMakeup2, addPhotos])
 
     // Format prices to local currency.
     let money = new Intl.NumberFormat('en-CM', {
@@ -134,11 +141,14 @@ const BookPage = () => {
                     }
                 </div>
             </div>
+
+            {/* Step 3 starts */}
+
             {
                 pdtSeldObject ?
                     <div className="book-details__wrap">
-                        <div className={`book-details-person ${personDetailsDropdownVisbility}`}>
-                            <div className="book-details-person__header" onClick={() => setPersonDetailsDropdownState(prevstate => !prevstate)}>
+                        <div className={`book-details-person ${person1DropdownVisbility}`}>
+                            <div className="book-details-person__header" onClick={() => setPerson1DropdownState(prevstate => !prevstate)}>
                                 <div className="book-details-person__header-text">Person 1</div>
                                 <div className="book-details-person__header-icon"></div>
                             </div>
@@ -154,16 +164,47 @@ const BookPage = () => {
                                 <div className="book-details-person__item-wrap">
                                     <div className="book-details-person__item-label">Make-up needed?</div>
                                     <div className="book-details-person__item-controls">
-                                        <input type="radio" name="book-details-person__makeup" id="book-details-person__makeup-no"
+                                        <input type="radio" name="book-details-person1__makeup" id="book-details-person1__makeup-no"
                                             onChange={() => setNeedsMakeup1(false)} defaultChecked />
-                                        <label htmlFor="book-details-person__makeup-no">No</label>
-                                        <input type="radio" name="book-details-person__makeup" id="book-details-person__makeup-yes"
+                                        <label htmlFor="book-details-person1__makeup-no">No</label>
+                                        <input type="radio" name="book-details-person1__makeup" id="book-details-person1__makeup-yes"
                                             onChange={() => setNeedsMakeup1(true)} />
-                                        <label htmlFor="book-details-person__makeup-yes">Yes</label>
+                                        <label htmlFor="book-details-person1__makeup-yes">Yes</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {
+                            productSelected == ("Duo (2 People)" || "Group (3 or more people)") ?
+                                <div className={`book-details-person ${person2DropdownVisbility}`}>
+                                    <div className="book-details-person__header" onClick={() => setPerson2DropdownState(prevstate => !prevstate)}>
+                                        <div className="book-details-person__header-text">Person 2</div>
+                                        <div className="book-details-person__header-icon"></div>
+                                    </div>
+                                    <div className="book-details-person__body">
+                                        <div className="book-details-person__item-wrap">
+                                            <div className="book-details-person__item-label">Number of outfits</div>
+                                            <div className="book-details-person__item-controls">
+                                                <button onClick={() => outfits2 > 1 && setOutfits2((count) => count - 1)}>-</button>
+                                                <span>{outfits2}</span>
+                                                <button onClick={() => outfits2 < 10 && setOutfits2((count) => count + 1)}>+</button>
+                                            </div>
+                                        </div>
+                                        <div className="book-details-person__item-wrap">
+                                            <div className="book-details-person__item-label">Make-up needed?</div>
+                                            <div className="book-details-person__item-controls">
+                                                <input type="radio" name="book-details-person2__makeup" id="book-details-person2__makeup-no"
+                                                    onChange={() => setNeedsMakeup2(false)} defaultChecked />
+                                                <label htmlFor="book-details-person2__makeup-no">No</label>
+                                                <input type="radio" name="book-details-person2__makeup" id="book-details-person2__makeup-yes"
+                                                    onChange={() => setNeedsMakeup2(true)} />
+                                                <label htmlFor="book-details-person2__makeup-yes">Yes</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                : null
+                        }
                         <div className="book-details-edphotos__wrap">
                             <div className="book-details-edphotos__text">Includes {inclPhotos} edited photos</div>
                             <div className="book-details-person__item-wrap">
@@ -176,7 +217,7 @@ const BookPage = () => {
                             </div>
                         </div>
                         <div className="book-details-general">
-                            <div className="book-details-general__total-cost">Total Cost: {money.format(totalCost)}</div>
+                            <div className="book-details-general__total-cost"><h3>Total Cost: {money.format(totalCost)}</h3></div>
                             <div className="book-details-general__total-photos">Total edited photos: {inclPhotos + addPhotos}</div>
                             <div className="book-details-general__btn"><button>Proceed</button></div>
                         </div>

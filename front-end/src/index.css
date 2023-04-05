@@ -405,7 +405,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 8px 16px 16px;
+  padding: 8px 16px;
 }
 
 .hidden>.book-details-person__body {
@@ -416,6 +416,11 @@ main {
 
 :not(.hidden)>.book-details-person__body {
   border-top: 2px solid var(--light-grey);
+}
+
+.book-details-general {
+  border-top: 2px solid var(--light-grey);
+  padding-top: 8px;
 }
 
 .book-details-general__btn button {
@@ -603,4 +608,14 @@ main {
 
 .dark-mode :not(.hidden)>.book-details-person__body {
   border-top: 2px solid var(--dark-grey);
+}
+
+.dark-mode .book-details-general {
+  border-top: 2px solid var(--dark-grey);
+}
+
+.dark-mode .book-details-person__item-controls label {
+  border: var(--dark-mode-thin-border);
+  padding: 0 8px;
+  background-color: var(--almost-black);
 }

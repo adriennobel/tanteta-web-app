@@ -12,7 +12,7 @@ const serviceObject = [
         }, {
             name: "Duo (2 People)",
             image: "/images/TAN_9628.jpg",
-            starting: 10000,
+            starting: 9000,
             dedphotos: 3,
         }, {
             name: "Group (3 or more people)",
@@ -36,25 +36,30 @@ const serviceObject = [
         image: "/images/TAN_2761.jpg",
         slug: "outdoor-shooting",
         products: [{
-            name: "Solo Shooting (On Person)",
+            name: "Solo (1 Person)",
             image: "/images/TAN_9628.jpg",
-            starting: 15000
+            starting: 15000,
+            dedphotos: 5,
         }, {
             name: "Duo (2 People)",
             image: "/images/TAN_9628.jpg",
-            starting: 25000
+            starting: 25000,
+            dedphotos: 8,
         }, {
             name: "Group (3 or more people)",
             image: "/images/TAN_9628.jpg",
-            starting: 30000
+            starting: 30000,
+            dedphotos: 10,
         }, {
             name: "Baby (Less than 6 y-o)",
             image: "/images/TAN_9628.jpg",
-            starting: 20000
+            starting: 20000,
+            dedphotos: 5,
         }, {
             name: "Pregnancy (1 person)",
             image: "/images/TAN_9628.jpg",
-            starting: 15000
+            starting: 15000,
+            dedphotos: 5,
         }]
     },
     {
@@ -62,25 +67,30 @@ const serviceObject = [
         image: "/images/TAN_2761.jpg",
         slug: "home-shooting",
         products: [{
-            name: "Solo Shooting (On Person)",
+            name: "Solo (1 Person)",
             image: "/images/TAN_9628.jpg",
-            starting: 15000
+            starting: 15000,
+            dedphotos: 5,
         }, {
             name: "Duo (2 People)",
             image: "/images/TAN_9628.jpg",
-            starting: 25000
+            starting: 25000,
+            dedphotos: 8,
         }, {
             name: "Group (3 or more people)",
             image: "/images/TAN_9628.jpg",
-            starting: 30000
+            starting: 30000,
+            dedphotos: 10,
         }, {
             name: "Baby (Less than 6 y-o)",
             image: "/images/TAN_9628.jpg",
-            starting: 20000
+            starting: 20000,
+            dedphotos: 5,
         }, {
             name: "Pregnancy (1 person)",
             image: "/images/TAN_9628.jpg",
-            starting: 15000
+            starting: 15000,
+            dedphotos: 5,
         }]
     },
     {
