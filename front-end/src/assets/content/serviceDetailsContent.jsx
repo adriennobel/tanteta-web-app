@@ -100,7 +100,8 @@ const serviceObject = [
         products: [{
             name: "",
             image: "",
-            starting: 10000
+            starting: 15000,
+            dedphotos: 5,
         }]
     },
     {
@@ -110,7 +111,8 @@ const serviceObject = [
         products: [{
             name: "",
             image: "",
-            starting: 10000
+            starting: 100000,
+            dedphotos: 25,
         }]
     },
     {
@@ -120,7 +122,8 @@ const serviceObject = [
         products: [{
             name: "",
             image: "",
-            starting: 10000
+            starting: 10000,
+            dedphotos: 0,
         }]
     },
     {
@@ -130,7 +133,8 @@ const serviceObject = [
         products: [{
             name: "",
             image: "",
-            starting: 10000
+            starting: 10000,
+            dedphotos: -1,
         }]
     }];
 

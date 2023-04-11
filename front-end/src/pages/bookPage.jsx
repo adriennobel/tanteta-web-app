@@ -50,6 +50,14 @@ const BookPage = () => {
     const [addPhotos, setAddPhotos] = useState(0);
     let [totalCost, setTotalCost] = useState(0);
 
+    // state for the array of person(s) in the booking
+    const [person, setPerson] = useState(
+        [{
+            outfits: 1,
+            needsmakeup: false
+        },]
+    );
+
     useEffect(() => {
         // initialize book details states once selected product exists and object is found
         if (pdtSeldObject) {
@@ -82,7 +90,7 @@ const BookPage = () => {
         currency: 'XAF',
     });
 
-    // console.log(serviceObject[0].products[0].name);
+    console.log(serviceObject[0]);
     // console.log(pdtSeldObject.dedphotos);
     // console.log(sericesObject["Service"]["Product"].name);
 
