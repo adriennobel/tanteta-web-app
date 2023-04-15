@@ -33,56 +33,97 @@ const BookPage = () => {
     let [productSelected, setProductSelected] = useState('Select One');
 
     // variable that updates when states of service & product update and hold object of selected product
-    let pdtSeldObject = (serviceSelected != "Select One" && productSelected != "Select One") ?
+    let pdtSeldObject = (["Studio Shooting", "Outdoor Shooting", "Home Shooting"].includes(serviceSelected) && productSelected != "Select One") ?
         serviceObject.find(service => service.name == serviceSelected).products.find(product => product.name == productSelected) : "";
 
-    // State that controls visibiity of each person's book detail 
-    const [person1DropdownState, setPerson1DropdownState] = useState(true);
-    let person1DropdownVisbility = person1DropdownState ? "" : "hidden";
-    const [person2DropdownState, setPerson2DropdownState] = useState(true);
-    let person2DropdownVisbility = person2DropdownState ? "" : "hidden";
-
     // state that controls booking details
-    const [outfits1, setOutfits1] = useState(1), [outfits2, setOutfits2] = useState(1);
-    const [needsMakeup1, setNeedsMakeup1] = useState(false), [needsMakeup2, setNeedsMakeup2] = useState(false);
-    let makeupcost = 0;
-    const [inclPhotos, setInclPhotos] = useState(0);
+    const [includedPhotos, setIncludedPhotos] = useState(0);
     const [addPhotos, setAddPhotos] = useState(0);
     let [totalCost, setTotalCost] = useState(0);
 
-    // state for the array of person(s) in the booking
-    const [person, setPerson] = useState(
-        [{
-            outfits: 1,
-            needsmakeup: false
-        },]
-    );
+    // person object
+    const person = {
+        outfits: 1,
+        makeup: 0
+    }
+
+    // state for the array of person's objects in the booking
+    const [persons, setPersons] = useState([person]);
+
+    function addPerson() {
+        // setPersons([...persons, person]);
+        const tempPersons = [...persons];
+        tempPersons.push(person);
+        setPersons(tempPersons);
+    }
+
+    function removePerson(index) {
+        // assign array to a temp so that the splice method won't affect it yet
+        const tempPersons = [...persons];
+        tempPersons.splice(index, 1);
+        setPersons(tempPersons);
+    }
+
+    function addPersonOutfit(index) {
+        const tempPersons = [...persons];
+        if (persons[index].outfits < 10) {
+            tempPersons[index].outfits++;
+            setPersons(tempPersons);
+        }
+    }
+
+    function removePersonOutfit(index) {
+        const tempPersons = [...persons];
+        if (persons[index].outfits > 1) {
+            tempPersons[index].outfits--;
+            setPersons(tempPersons);
+        }
+    }
+
+    function toggleMakeupNeeded(index, value) {
+        const tempPersons = [...persons];
+        tempPersons[index].makeup = value;
+        setPersons(tempPersons);
+    }
 
     useEffect(() => {
-        // initialize book details states once selected product exists and object is found
-        if (pdtSeldObject) {
-            setInclPhotos(pdtSeldObject.dedphotos);
-            setTotalCost(pdtSeldObject.starting);
+        // initialize book details states once product is selected
+
+        if (productSelected == "Duo (2 People)") {
+            setPersons([person, { outfits: 1, makeup: 0 }])
+        } else if (productSelected == "Group (3 or more people)") {
+            setPersons([person, { outfits: 1, makeup: 0 }, { outfits: 1, makeup: 0 }])
+        } else {
+            setPersons([person]);
         }
-        setOutfits1(1); setOutfits2(1);
-        setNeedsMakeup1(false); setNeedsMakeup2(false);
+
         setAddPhotos(0);
+        setIncludedPhotos(pdtSeldObject.dedphotos);
+        setTotalCost(pdtSeldObject.starting);
+
     }, [productSelected]);
 
     useEffect(() => {
-        needsMakeup1 ? makeupcost += 3000 : null;
-        needsMakeup2 ? makeupcost += 3000 : null;
+
         // calculate total cost based on product selected
-        if (pdtSeldObject) {
-            if (productSelected == "Solo (1 Person)") {
-                setInclPhotos(3 * outfits1 - 1);
-                setTotalCost(pdtSeldObject.starting * outfits1 + addPhotos * 2000 + makeupcost);
-            } else if (productSelected == "Duo (2 People)") {
-                setInclPhotos(Math.floor(3 * (outfits1 + outfits2) / 2));
-                setTotalCost(pdtSeldObject.starting * (outfits1 + outfits2) / 2 + addPhotos * 2000 + makeupcost);
-            }
+        if (productSelected == "Duo (2 People)") {
+            setIncludedPhotos(Math.floor(3 * (persons[0].outfits + persons[1].outfits) / 2));
+            setTotalCost(pdtSeldObject.starting * (persons[0].outfits + persons[1].outfits) / 2 + addPhotos * 2000 + persons[0].makeup + persons[1].makeup);
+        } else if (productSelected == "Group (3 or more people)") {
+            let outfits = 0, makeups = 0;
+            persons.forEach(p => outfits += p.outfits);
+            persons.forEach(p => makeups += p.makeup);
+
+            const increment = serviceSelected == "Studio Shooting" ? 3000 : 5000;
+
+            setIncludedPhotos(Math.floor((persons.length + 1) * outfits / persons.length));
+            setTotalCost((pdtSeldObject.starting + (persons.length - 3) * increment) + (outfits - persons.length) * increment + addPhotos * 2000 + makeups);
+        } else {
+            setIncludedPhotos(3 * persons[0].outfits - 1);
+            setTotalCost(pdtSeldObject.starting * persons[0].outfits + addPhotos * 2000 + persons[0].makeup);
         }
-    }, [outfits1, needsMakeup1, outfits2, needsMakeup2, addPhotos])
+
+    }, [persons, addPhotos])
 
     // Format prices to local currency.
     let money = new Intl.NumberFormat('en-CM', {
@@ -90,10 +131,15 @@ const BookPage = () => {
         currency: 'XAF',
     });
 
-    console.log(serviceObject[0]);
+    const bookingDetails = {
+        Service: productSelected,
+        Details: persons,
+        "Edited Photos": includedPhotos + addPhotos,
+        Total: totalCost,
+    }
+
     // console.log(pdtSeldObject.dedphotos);
     // console.log(sericesObject["Service"]["Product"].name);
-
 
     return (
         <div className="book-page">
@@ -155,68 +201,49 @@ const BookPage = () => {
             {
                 pdtSeldObject ?
                     <div className="book-details__wrap">
-                        <div className={`book-details-person ${person1DropdownVisbility}`}>
-                            <div className="book-details-person__header" onClick={() => setPerson1DropdownState(prevstate => !prevstate)}>
-                                <div className="book-details-person__header-text">Person 1</div>
-                                <div className="book-details-person__header-icon"></div>
-                            </div>
-                            <div className="book-details-person__body">
-                                <div className="book-details-person__item-wrap">
-                                    <div className="book-details-person__item-label">Number of outfits</div>
-                                    <div className="book-details-person__item-controls">
-                                        <button onClick={() => outfits1 > 1 && setOutfits1((count) => count - 1)}>-</button>
-                                        <span>{outfits1}</span>
-                                        <button onClick={() => outfits1 < 10 && setOutfits1((count) => count + 1)}>+</button>
-                                    </div>
-                                </div>
-                                <div className="book-details-person__item-wrap">
-                                    <div className="book-details-person__item-label">Make-up needed?</div>
-                                    <div className="book-details-person__item-controls">
-                                        <input type="radio" name="book-details-person1__makeup" id="book-details-person1__makeup-no"
-                                            onChange={() => setNeedsMakeup1(false)} defaultChecked />
-                                        <label htmlFor="book-details-person1__makeup-no">No</label>
-                                        <input type="radio" name="book-details-person1__makeup" id="book-details-person1__makeup-yes"
-                                            onChange={() => setNeedsMakeup1(true)} />
-                                        <label htmlFor="book-details-person1__makeup-yes">Yes</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {
-                            productSelected == ("Duo (2 People)" || "Group (3 or more people)") ?
-                                <div className={`book-details-person ${person2DropdownVisbility}`}>
-                                    <div className="book-details-person__header" onClick={() => setPerson2DropdownState(prevstate => !prevstate)}>
-                                        <div className="book-details-person__header-text">Person 2</div>
-                                        <div className="book-details-person__header-icon"></div>
-                                    </div>
-                                    <div className="book-details-person__body">
-                                        <div className="book-details-person__item-wrap">
-                                            <div className="book-details-person__item-label">Number of outfits</div>
-                                            <div className="book-details-person__item-controls">
-                                                <button onClick={() => outfits2 > 1 && setOutfits2((count) => count - 1)}>-</button>
-                                                <span>{outfits2}</span>
-                                                <button onClick={() => outfits2 < 10 && setOutfits2((count) => count + 1)}>+</button>
-                                            </div>
+                        {persons.map((person, index) => (
+                            <div className={`book-details-person book-details-person-${index + 1}`} key={index}>
+                                <div className="book-details-person__header">
+                                    <div className="book-details-person__header-text">Person {index + 1}</div>
+                                    {persons.length > 3 &&
+                                        <div className="book-details-person__header-icon">
+                                            <button onClick={() => removePerson(index)}><i className="fa-solid fa-trash-can"></i></button>
                                         </div>
-                                        <div className="book-details-person__item-wrap">
-                                            <div className="book-details-person__item-label">Make-up needed?</div>
-                                            <div className="book-details-person__item-controls">
-                                                <input type="radio" name="book-details-person2__makeup" id="book-details-person2__makeup-no"
-                                                    onChange={() => setNeedsMakeup2(false)} defaultChecked />
-                                                <label htmlFor="book-details-person2__makeup-no">No</label>
-                                                <input type="radio" name="book-details-person2__makeup" id="book-details-person2__makeup-yes"
-                                                    onChange={() => setNeedsMakeup2(true)} />
-                                                <label htmlFor="book-details-person2__makeup-yes">Yes</label>
-                                            </div>
+                                    }
+                                </div>
+                                <div className="book-details-person__body">
+                                    <div className="book-details-person__item-wrap">
+                                        <div className="book-details-person__item-label">Number of outfits</div>
+                                        <div className="book-details-person__item-controls">
+                                            <button onClick={() => removePersonOutfit(index)}>-</button>
+                                            <span>{person.outfits}</span>
+                                            <button onClick={() => addPersonOutfit(index)}>+</button>
+                                        </div>
+                                    </div>
+                                    <div className="book-details-person__item-wrap">
+                                        <div className="book-details-person__item-label">Make-up needed?</div>
+                                        <div className="book-details-person__item-controls">
+                                            <input type="radio" name={`book-details-person${index + 1}__makeup`} id={`book-details-person${index + 1}__makeup-no`}
+                                                onChange={() => toggleMakeupNeeded(index, 0)} defaultChecked />
+                                            <label htmlFor={`book-details-person${index + 1}__makeup-no`}>No</label>
+                                            <input type="radio" name={`book-details-person${index + 1}__makeup`} id={`book-details-person${index + 1}__makeup-yes`}
+                                                onChange={() => toggleMakeupNeeded(index, 3000)} />
+                                            <label htmlFor={`book-details-person${index + 1}__makeup-yes`}>Yes</label>
                                         </div>
                                     </div>
                                 </div>
-                                : null
+
+                            </div>
+                        ))}
+
+                        {persons.length < 10 && pdtSeldObject.name == "Group (3 or more people)" &&
+                            <button onClick={addPerson}><i className="fa-solid fa-user-plus"></i></button>
                         }
+
                         <div className="book-details-edphotos__wrap">
-                            <div className="book-details-edphotos__text">Includes {inclPhotos} edited photos</div>
+                            <div className="book-details-edphotos__text">This selection includes {includedPhotos} edited photos</div>
                             <div className="book-details-person__item-wrap">
-                                <div className="book-details-person__item-label">Add?</div>
+                                <div className="book-details-person__item-label">Add more photos?</div>
                                 <div className="book-details-person__item-controls">
                                     <button onClick={() => addPhotos > 0 && setAddPhotos((count) => count - 1)}>-</button>
                                     <span>{addPhotos}</span>
@@ -226,8 +253,8 @@ const BookPage = () => {
                         </div>
                         <div className="book-details-general">
                             <div className="book-details-general__total-cost"><h3>Total Cost: {money.format(totalCost)}</h3></div>
-                            <div className="book-details-general__total-photos">Total edited photos: {inclPhotos + addPhotos}</div>
-                            <div className="book-details-general__btn"><button>Proceed</button></div>
+                            <div className="book-details-general__total-photos">Total edited photos: {includedPhotos + addPhotos}</div>
+                            <div className="book-details-general__btn"><button onClick={() => console.log(bookingDetails)}>Proceed</button></div>
                         </div>
                     </div>
                     : null

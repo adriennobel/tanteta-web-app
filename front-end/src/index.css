@@ -392,15 +392,6 @@ main {
   cursor: pointer;
 }
 
-.book-details-person__header-icon::before {
-  font-family: FontAwesome;
-  content: "\f068";
-}
-
-.hidden .book-details-person__header-icon::before {
-  content: "\f067";
-}
-
 .book-details-person__body {
   display: flex;
   flex-direction: column;

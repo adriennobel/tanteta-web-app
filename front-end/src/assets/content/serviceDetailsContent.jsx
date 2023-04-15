@@ -17,12 +17,12 @@ const serviceObject = [
         }, {
             name: "Group (3 or more people)",
             image: "/images/TAN_9628.jpg",
-            starting: 15000,
+            starting: 12000,
             dedphotos: 4,
         }, {
             name: "Baby (Less than 6 y-o)",
             image: "/images/TAN_9628.jpg",
-            starting: 10000,
+            starting: 7500,
             dedphotos: 2,
         }, {
             name: "Pregnancy (1 person)",
@@ -43,12 +43,12 @@ const serviceObject = [
         }, {
             name: "Duo (2 People)",
             image: "/images/TAN_9628.jpg",
-            starting: 25000,
+            starting: 20000,
             dedphotos: 8,
         }, {
             name: "Group (3 or more people)",
             image: "/images/TAN_9628.jpg",
-            starting: 30000,
+            starting: 25000,
             dedphotos: 10,
         }, {
             name: "Baby (Less than 6 y-o)",
@@ -74,12 +74,12 @@ const serviceObject = [
         }, {
             name: "Duo (2 People)",
             image: "/images/TAN_9628.jpg",
-            starting: 25000,
+            starting: 20000,
             dedphotos: 8,
         }, {
             name: "Group (3 or more people)",
             image: "/images/TAN_9628.jpg",
-            starting: 30000,
+            starting: 25000,
             dedphotos: 10,
         }, {
             name: "Baby (Less than 6 y-o)",
@@ -94,25 +94,14 @@ const serviceObject = [
         }]
     },
     {
-        name: "Event Coverage Per Hour",
+        name: "Event Coverage",
         image: "/images/TAN_2761.jpg",
         slug: "event-per-hour",
         products: [{
             name: "",
             image: "",
-            starting: 15000,
+            starting: 50000,
             dedphotos: 5,
-        }]
-    },
-    {
-        name: "Event Coverage Per Package",
-        image: "/images/TAN_2761.jpg",
-        slug: "evnt-per-pack",
-        products: [{
-            name: "",
-            image: "",
-            starting: 100000,
-            dedphotos: 25,
         }]
     },
     {
