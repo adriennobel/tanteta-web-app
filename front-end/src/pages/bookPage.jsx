@@ -30,10 +30,10 @@ const BookPage = () => {
     let productQuestionDropdownVisbility = productQuestionDropdownState ? "clicked" : "";
 
     // state that controls selection of product dropdown item
-    let [productSelected, setProductSelected] = useState('Select One');
+    const [productSelected, setProductSelected] = useState('Select One');
 
     // variable that updates when states of service & product update and hold object of selected product
-    let pdtSeldObject = (["Studio Shooting", "Outdoor Shooting", "Home Shooting"].includes(serviceSelected) && productSelected != "Select One") ?
+    let foundShootingProduct = (["Studio Shooting", "Outdoor Shooting", "Home Shooting"].includes(serviceSelected) && productSelected != "Select One") ?
         serviceObject.find(service => service.name == serviceSelected).products.find(product => product.name == productSelected) : "";
 
     // state that controls booking details
@@ -98,8 +98,8 @@ const BookPage = () => {
         }
 
         setAddPhotos(0);
-        setIncludedPhotos(pdtSeldObject.dedphotos);
-        setTotalCost(pdtSeldObject.starting);
+        setIncludedPhotos(foundShootingProduct.dedphotos);
+        setTotalCost(foundShootingProduct.starting);
 
     }, [productSelected]);
 
@@ -108,22 +108,33 @@ const BookPage = () => {
         // calculate total cost based on product selected
         if (productSelected == "Duo (2 People)") {
             setIncludedPhotos(Math.floor(3 * (persons[0].outfits + persons[1].outfits) / 2));
-            setTotalCost(pdtSeldObject.starting * (persons[0].outfits + persons[1].outfits) / 2 + addPhotos * 2000 + persons[0].makeup + persons[1].makeup);
+            setTotalCost(foundShootingProduct.starting + (persons[0].outfits + persons[1].outfits - 2) * foundShootingProduct.increment + addPhotos * 2000 + persons[0].makeup + persons[1].makeup);
         } else if (productSelected == "Group (3 or more people)") {
             let outfits = 0, makeups = 0;
             persons.forEach(p => outfits += p.outfits);
             persons.forEach(p => makeups += p.makeup);
 
-            const increment = serviceSelected == "Studio Shooting" ? 3000 : 5000;
-
             setIncludedPhotos(Math.floor((persons.length + 1) * outfits / persons.length));
-            setTotalCost((pdtSeldObject.starting + (persons.length - 3) * increment) + (outfits - persons.length) * increment + addPhotos * 2000 + makeups);
+            setTotalCost((foundShootingProduct.starting + (persons.length - 3) * foundShootingProduct.increment) + (outfits - persons.length) * foundShootingProduct.increment + addPhotos * 2000 + makeups);
         } else {
-            setIncludedPhotos(3 * persons[0].outfits - 1);
-            setTotalCost(pdtSeldObject.starting * persons[0].outfits + addPhotos * 2000 + persons[0].makeup);
+
+            setIncludedPhotos(2 * persons[0].outfits);
+            setTotalCost(foundShootingProduct.starting + (persons[0].outfits - 1) * foundShootingProduct.increment + addPhotos * 2000 + persons[0].makeup);
         }
 
     }, [persons, addPhotos])
+
+    const bookingDetails = {
+        Service: serviceSelected,
+        Product: productSelected,
+        Details: persons,
+        "Edited Photos": includedPhotos + addPhotos,
+        Total: totalCost,
+    }
+
+    function proceedToBook() {
+        console.log(bookingDetails);
+    }
 
     // Format prices to local currency.
     let money = new Intl.NumberFormat('en-CM', {
@@ -131,14 +142,7 @@ const BookPage = () => {
         currency: 'XAF',
     });
 
-    const bookingDetails = {
-        Service: productSelected,
-        Details: persons,
-        "Edited Photos": includedPhotos + addPhotos,
-        Total: totalCost,
-    }
-
-    // console.log(pdtSeldObject.dedphotos);
+    // console.log(foundShootingProduct.dedphotos);
     // console.log(sericesObject["Service"]["Product"].name);
 
     return (
@@ -196,10 +200,8 @@ const BookPage = () => {
                 </div>
             </div>
 
-            {/* Step 3 starts */}
-
             {
-                pdtSeldObject ?
+                foundShootingProduct ?
                     <div className="book-details__wrap">
                         {persons.map((person, index) => (
                             <div className={`book-details-person book-details-person-${index + 1}`} key={index}>
@@ -236,7 +238,7 @@ const BookPage = () => {
                             </div>
                         ))}
 
-                        {persons.length < 10 && pdtSeldObject.name == "Group (3 or more people)" &&
+                        {persons.length < 10 && foundShootingProduct.name == "Group (3 or more people)" &&
                             <button onClick={addPerson}><i className="fa-solid fa-user-plus"></i></button>
                         }
 
@@ -254,11 +256,13 @@ const BookPage = () => {
                         <div className="book-details-general">
                             <div className="book-details-general__total-cost"><h3>Total Cost: {money.format(totalCost)}</h3></div>
                             <div className="book-details-general__total-photos">Total edited photos: {includedPhotos + addPhotos}</div>
-                            <div className="book-details-general__btn"><button onClick={() => console.log(bookingDetails)}>Proceed</button></div>
+                            <div className="book-details-general__btn"><button onClick={proceedToBook}>Proceed</button></div>
                         </div>
                     </div>
                     : null
             }
+            
+            {foundShootingProduct && <div><pre><code>{JSON.stringify(bookingDetails, null, 2)}</code></pre></div>}
         </div>
     );
 }

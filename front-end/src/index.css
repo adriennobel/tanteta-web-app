@@ -24,6 +24,10 @@
   margin: 0;
 }
 
+code {
+  font-family: monospace;
+}
+
 .App {
   color: var(--dark-grey);
   background-color: var(--almost-white);
