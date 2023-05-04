@@ -116,6 +116,7 @@ const serviceObject = [
             name: "",
             image: "",
             starting: 50000,
+            increment: 0,
             dedphotos: 5,
         }]
     },
@@ -127,6 +128,7 @@ const serviceObject = [
             name: "",
             image: "",
             starting: 10000,
+            increment: 0,
             dedphotos: 0,
         }]
     },
@@ -138,6 +140,7 @@ const serviceObject = [
             name: "",
             image: "",
             starting: 10000,
+            increment: 0,
             dedphotos: -1,
         }]
     }];
