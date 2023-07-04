@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import useBookingDetailsComp from "../components/bookingDetailsComp";
+import BookingDetailsComp from "../components/bookingDetailsComp";
 import useBookingCalendarComp from "../components/bookingCalendarComp";
 
 const BookPage = () => {
 
-   const { bookingDetails, bookingDetailsRender } = useBookingDetailsComp();
-   const { viewedDayISO, viewedDayTimeAvail, viewedDayString, bookingCalendarRender } = useBookingCalendarComp();
+   const { viewedDayISO, viewedDayTimeAvail, bookingCalendarRender } = useBookingCalendarComp();
 
    // NEXT STEPS: 
    // 1. create a state to store the selected timeslot.
@@ -16,31 +15,10 @@ const BookPage = () => {
    return (
       <div className="book-page">
 
-         {bookingDetailsRender}
+         <BookingDetailsComp />
+         {bookingCalendarRender}
 
-         <div className="book-calendar-and-time__wrap">
-            {bookingCalendarRender}
-
-            <div className="book-timeslot__wrap">
-               <div>
-                  <div className="book-timeslot-head__wrap">
-                     {viewedDayString}
-                  </div>
-                  <div className="book-timeslot-body__wrap">
-                     {
-                        viewedDayTimeAvail.map((time, index) => (
-                           <div className="book-timeslot-time" key={index}>
-                              <input type="radio" name="book-timeslot-time" id={time} />
-                              <label htmlFor={time}>{time}</label>
-                           </div>
-                        ))
-                     }
-                  </div>
-               </div>
-
-            </div>
-         </div>
-
+         
       </div>
    );
 }
