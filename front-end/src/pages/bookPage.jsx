@@ -1,10 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import BookingDetailsComp from "../components/bookingDetailsComp";
-import useBookingCalendarComp from "../components/bookingCalendarComp";
 
 const BookPage = () => {
-
-   const { viewedDayISO, viewedDayTimeAvail, bookingCalendarRender } = useBookingCalendarComp();
 
    // NEXT STEPS: 
    // 1. create a state to store the selected timeslot.
@@ -16,8 +13,6 @@ const BookPage = () => {
       <div className="book-page">
 
          <BookingDetailsComp />
-         {bookingCalendarRender}
-
          
       </div>
    );

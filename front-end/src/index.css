@@ -537,7 +537,8 @@ main {
   padding-top: 8px;
 }
 
-.book-details-general__btn button {
+.book-details-general__btn button,
+.book-timeslot-btn__wrap button {
   background-color: var(--tanteta-brown);
   border: none;
   color: white;
@@ -621,13 +622,6 @@ main {
   gap: 2px;
 }
 
-.book-timeslot-body__wrap {
-  margin: 8px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 8px;
-}
-
 .book-calendar-day__wrap input,
 .book-timeslot-time input {
   opacity: 0;
@@ -678,8 +672,26 @@ main {
   color: var(--light-grey);
 }
 
+.book-timeslot-body__wrap {
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.book-timeslots__wrap {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+}
+
 .book-timeslot-time label {
   background-color: rgba(127, 127, 127, 0.05);
+}
+
+.book-timeslot-btn__wrap {
+  border-top: 2px solid var(--light-grey);
+  padding-top: 8px;
 }
 
 
@@ -872,4 +884,8 @@ main {
 .dark-mode .book-timeslot-head__wrap {
   background-color: var(--almost-black);
   border-bottom: 2px solid var(--dark-grey);
+}
+
+.dark-mode .book-timeslot-btn__wrap {
+  border-top: 2px solid var(--dark-grey);
 }
