@@ -23,6 +23,7 @@
   font-family: 'Poppins', sans-serif;
   font-size: 100%;
   margin: 0;
+  accent-color: var(--tanteta-brown);
 }
 
 code {
@@ -33,6 +34,10 @@ code {
   color: var(--dark-grey);
   background-color: var(--almost-white);
   min-height: 100vh;
+}
+
+.flex-gap-8 {
+  gap: 8px;
 }
 
 /* GLOBAL HEADER */
@@ -280,6 +285,28 @@ main {
 }
 
 
+/* DROPDOWN COMPONENT */
+
+.drop-down-component .dropdown-children__wrap.clicked {
+  height: 60px;
+}
+
+
+/* BUTTON COMPONENTS */
+
+.button-btn-primary__wrap button {
+  background-color: var(--tanteta-brown);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.button-btn-primary__wrap button:active {
+  transform: translateY(1px);
+}
+
 
 /* BOOK PAGE */
 
@@ -342,7 +369,7 @@ main {
 }
 
 .book-question-dropdown-options.clicked {
-  height: var(--height, 0);
+  height: var(--height);
   border: solid var(--light-grey);
   border-width: 0 2px 2px;
 }
@@ -537,16 +564,6 @@ main {
   padding-top: 8px;
 }
 
-.book-details-general__btn button,
-.book-timeslot-btn__wrap button {
-  background-color: var(--tanteta-brown);
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
 /* ---------- */
 
 .book-calendar-and-time__wrap2 {
@@ -695,197 +712,189 @@ main {
 }
 
 
+/* ---------- */
+
+.book-contact-details__wrap2 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 14px;
+}
+
+.book-contact-input__wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.book-contact-input-conscent__wrap {
+  display: flex;
+  gap: 8px;
+  font-size: 90%;
+  line-height: 1;
+  align-items: center;
+}
+
+.book-contact-input__wrap>input {
+  border: var(--light-mode-thin-border);
+  border-radius: 8px;
+  padding: 4px 16px;
+  background-color: var(--almost-white);
+  color: var(--dark-grey);
+}
+
 /* DARK MODE */
 
 .App.dark-mode {
   background-color: var(--almost-black);
   color: var(--light-grey);
 }
-
 .dark-mode .header-container {
   border-bottom: var(--dark-mode-thin-border);
   background-color: var(--almost-black);
 }
-
 .dark-mode .header-icons__btn {
   color: var(--light-grey);
 }
-
 .dark-mode .visible .header-icons__btn {
   color: var(--tanteta-brown);
 }
-
 .dark-mode .nav-container {
   background-color: var(--almost-black);
   border-bottom: var(--dark-mode-thin-border);
   border-left: var(--dark-mode-thin-border);
 }
-
 .dark-mode .darkmode-toggle__label {
   opacity: .25;
 }
-
 .dark-mode .darkmode-toggle__label:hover {
   opacity: 1;
 }
-
 .dark-mode .serice-card {
   background-color: var(--very-dark-grey);
 }
-
 .dark-mode .serice-card:hover {
   box-shadow: 1px 2px 8px rgba(255, 255, 255, .1);
 }
-
 .dark-mode .service-card__text {
   border-left: var(--dark-mode-thin-border);
   border-right: var(--dark-mode-thin-border);
   border-bottom: var(--dark-mode-thin-border);
 }
-
 .dark-mode .service-card__title h3 {
   color: white;
 }
-
 .dark-mode .service-card__start-price span {
   color: var(--light-grey);
 }
-
 .dark-mode .cta-btn__secondary {
   color: var(--light-grey);
   border: 2px solid var(--light-grey);
 }
-
 .dark-mode .cta-btn__primary:hover {
   border-bottom: 3px solid white;
 }
-
-
 .dark-mode .book-question-dropdown-bar__wrap {
   border: var(--dark-mode-thin-border);
   background-color: var(--very-dark-grey);
 }
-
 .dark-mode .book-question-dropdown-bar__wrap:hover {
   box-shadow: var(--dark-mode-hover-shaddow-1);
 }
-
 .dark-mode .book-question-dropdown-option__wrap:last-child {
   border: none;
 }
-
 .dark-mode .book-question-dropdown-options {
   background-color: var(--very-dark-grey);
   border: solid var(--dark-grey);
   border-width: 0 2px;
 }
-
 .dark-mode .book-question-dropdown-options.clicked {
   border: solid var(--dark-grey);
   border-width: 0 2px 2px;
 }
-
 .dark-mode .book-question-dropdown-option__wrap {
   border-bottom: 1px solid var(--dark-grey);
 }
-
 .dark-mode .book-question-dropdown-option__wrap:hover {
   background-color: var(--almost-black);
 }
-
 .dark-mode .book-details-person {
   border: var(--dark-mode-thin-border);
 }
-
 .dark-mode .book-details-person__header {
   background-color: var(--almost-black);
 }
-
 .dark-mode .book-details-person__header-icon button {
   color: var(--light-grey);
 }
-
 .dark-mode .book-details-person__body {
   border-top: 2px solid var(--dark-grey);
 }
-
 .dark-mode .book-details-general {
   border-top: 2px solid var(--dark-grey);
 }
-
 .dark-mode .book-details-person__outfits-controls {
   border: var(--dark-mode-thin-border);
   background-color: var(--almost-black);
 }
-
 .dark-mode .book-details-person__outfits-controls button {
   color: var(--light-grey);
 }
-
 .dark-mode .book-details-person__outfits-controls span {
   border: solid var(--dark-grey);
   border-width: 0 2px;
   background-color: var(--very-dark-grey);
 }
-
 .dark-mode .book-details-person__makeup-controls label {
   background-color: var(--almost-black);
 }
-
 .dark-mode .book-details-person__makeup-controls label:first-of-type {
   border: solid var(--dark-grey);
   border-width: 2px 0 2px 2px;
 }
-
 .dark-mode .book-details-person__makeup-controls label:last-of-type {
   border: solid var(--dark-grey);
   border-width: 2px 2px 2px 0;
 }
-
 .dark-mode .book-details__add-person-button {
   background-color: var(--almost-black);
   border: var(--dark-mode-thin-border);
   color: var(--light-grey);
 }
-
 .dark-mode .book-calendar__wrap>div {
   border: var(--dark-mode-thin-border);
 }
-
 .dark-mode .book-calendar-head__wrap {
   background-color: var(--almost-black);
   border-bottom: 2px solid var(--dark-grey);
 }
-
 .dark-mode .book-calendar-head__wrap button {
   color: var(--light-grey);
 }
-
 .dark-mode .book-calendar-head__wrap button:disabled {
   color: var(--dark-grey);
 }
-
 .dark-mode .book-calendar-weekdays__wrap {
   border-bottom: 1px solid var(--dark-grey);
 }
-
 .dark-mode .book-calendar-day__wrap.disabled label {
   color: var(--dark-grey);
 }
-
 .dark-mode .book-calendar-day__wrap.today label::before {
   background-color: var(--light-grey);
 }
-
 .dark-mode .book-timeslot__wrap>div {
   border: var(--dark-mode-thin-border);
 }
-
 .dark-mode .book-timeslot-head__wrap {
   background-color: var(--almost-black);
   border-bottom: 2px solid var(--dark-grey);
 }
-
 .dark-mode .book-timeslot-btn__wrap {
   border-top: 2px solid var(--dark-grey);
+}
+.dark-mode .book-contact-input__wrap>input {
+  border: var(--dark-mode-thin-border);
+  background-color: var(--almost-black);
+  color: var(--light-grey);
 }
