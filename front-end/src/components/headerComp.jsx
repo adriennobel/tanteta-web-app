@@ -31,7 +31,9 @@ const HeaderComp = ({ toggleDarkmodeState }) => {
                     <div className="header-logo">Tanteta'</div>
                 </div>
                 <div className="header-icons-container">
-                    <div className="account-icon"><i className="fa-regular fa-circle-user"></i></div>
+                    <div className="account-icon">
+                        <Link to="/my-account"><i className="fa-regular fa-circle-user"></i></Link>
+                    </div>
                     <div onClick={toggleNavmenuState} className="nav-trigger-icon" id="nav-trigger-icon-id">
                         <button className="header-icons__btn"><span className="header-icons__btn-content"></span></button>
                     </div>
@@ -43,7 +45,7 @@ const HeaderComp = ({ toggleDarkmodeState }) => {
                         <nav>
                             <ul>
                                 <li><Link to="/">Home</Link></li>
-                                <li><Link to="/">Services</Link></li>
+                                <li><Link to="/services">Services</Link></li>
                                 <li><Link to="/">Blog</Link></li>
                                 <li><Link to="/">Contact US</Link></li>
                             </ul>

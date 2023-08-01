@@ -4,6 +4,8 @@ import HomePage from './pages/homePage';
 import BookPage from './pages/bookPage';
 import HeaderComp from './components/headerComp';
 import './App.css';
+import ServicesPage from './pages/servicesPage';
+import AccountPage from './pages/accountPage';
 
 function App() {
 
@@ -37,7 +39,9 @@ function App() {
 				<main>
 					<Routes>
 						<Route path='/' element={<HomePage />} />
+						<Route path='/services' element={<ServicesPage />} />
 						<Route path='/book' element={<BookPage />} />
+						<Route path='/my-account' element={<AccountPage />} />
 					</Routes>
 				</main>
 			</div>

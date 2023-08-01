@@ -1,15 +1,19 @@
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
+import axios from 'axios';
 import serviceObject from "../assets/content/serviceDetailsContent";
 
 const BookingDetailsComp = () => {
 
 	// GLOBAL CONSTANTS
+	//**********************************
 	const person = { outfits: 1, makeup: 0 }
 	const contactObject = { fname: "", lname: "", phone: "", email: "", address: "" }
 	const timezone = "T00:00-04:00";
 	const dateObject = new Date(); // Sat Apr 29 2023 07:13:20 GMT-0400 (Eastern Daylight Time)
 
 	// HELPER FUNCTIONS
+	//**********************************
 	function doubleDigitOf(month) {
 		const doubleDigitOf = month.toString().length < 2 ? ("0" + month) : month;
 		return doubleDigitOf
@@ -20,6 +24,12 @@ const BookingDetailsComp = () => {
 		currency: 'XAF',
 	});
 
+	// CHECK SEARCH PARAMS FIRTS
+	//**********************************
+	let [searchParams, setSearchParams] = useSearchParams();
+	const serviceParam = searchParams.get('service');
+	const productParam = searchParams.get('product');
+	
 	// STATES FOR SERVICE DROPDOWN
 	//**********************************
 	const [serviceSelected, setServiceSelected] = useState('Select One');
@@ -59,8 +69,9 @@ const BookingDetailsComp = () => {
 	let calendarTimeHeight = "0px";
 
 	const todayISOdate = dateObject.getFullYear() + "-" + doubleDigitOf(dateObject.getMonth() + 1) + "-" + doubleDigitOf(dateObject.getDate()); // 2023-4-29
+	const tomorrowISOdate = dateObject.getFullYear() + "-" + doubleDigitOf(dateObject.getMonth() + 1) + "-" + doubleDigitOf(dateObject.getDate() + 1);
 	const [counter, setCounter] = useState(0);
-	const [viewedDayISO, setViewedDayISO] = useState(todayISOdate);
+	const [viewedDayISO, setViewedDayISO] = useState(new Date(todayISOdate + timezone).getDay() !== 0 ? todayISOdate : tomorrowISOdate);
 	const viewedDayString = new Date(viewedDayISO + timezone).toLocaleDateString(undefined, { day: 'numeric', weekday: 'long', month: 'long', year: 'numeric' });
 	const previousMonthLastDateObject = new Date(dateObject.getFullYear(), dateObject.getMonth() + counter, 0); // new Date(2023, 3, 0)
 	const viewedMonthLastDateObject = new Date(dateObject.getFullYear(), dateObject.getMonth() + 1 + counter, 0); // new Date(2023, 4, 0)
@@ -80,8 +91,8 @@ const BookingDetailsComp = () => {
 	const viewedMonthISO = viewedMonthLastDateObject.getFullYear() + "-" + doubleDigitOf(viewedMonthLastDateObject.getMonth() + 1); // 2023-4
 
 	// below state is initialized by api response
-	const [viewedDayTimesAvail, setViewedDayTimesAvail] = useState(["11:00", "11:30", "12:00",]);
-	const [timeslotSelected, setTimeslotSelected] = useState(viewedDayTimesAvail[0]);
+	const [viewedDayTimesAvail, setViewedDayTimesAvail] = useState([]);
+	const [timeslotSelected, setTimeslotSelected] = useState('00:00');
 	const fullBookingISO = viewedDayISO + "T" + timeslotSelected;
 	const fullBookingString = new Date(fullBookingISO).toLocaleDateString(undefined, { minute: 'numeric', hour: 'numeric', day: 'numeric', weekday: 'short', month: 'numeric', year: '2-digit' });
 
@@ -105,8 +116,8 @@ const BookingDetailsComp = () => {
 
 	// FUNCTIONS FOR SERVICE DROPDOWN
 	//**********************************
-	function setServiceSelectedFxn(service) {
-		setServiceSelected(service);
+	function setServiceSelectedFxn(serviceName) {
+		setServiceSelected(serviceName);
 		setProductSelected('Select One');
 		setProductQuestionDropdownState(true);
 		setBookingDetailsDropdownState(false);
@@ -118,8 +129,8 @@ const BookingDetailsComp = () => {
 
 	// FUNCTIONS FOR CATEGORY DROPDOWN
 	//**********************************
-	function setProductSelectedFxn(product) {
-		setProductSelected(product);
+	function setProductSelectedFxn(productName) {
+		setProductSelected(productName);
 		setServiceQuestionDropdownState(false);
 		setBookingDetailsDropdownState(true);
 		setIsBookingDetailsValid(false);
@@ -187,12 +198,10 @@ const BookingDetailsComp = () => {
 	function prevMonth() {
 		counter > 0 && setCounter(count => count - 1);
 	}
-	function viewDayBooking(dayISO) {
+	async function viewDayBooking(dayISO) {
+		const response = await axios.get(`/api/availability/${dayISO}`);
+		setViewedDayTimesAvail(response.data);
 		setViewedDayISO(dayISO);
-
-		// make api call to GET timeslots of viewedDayISO and set to viewedDayTimesAvail so that it can be displayed
-		// below code is a test
-		dayISO === todayISOdate ? setViewedDayTimesAvail(["11:00", "11:30", "12:00",]) : setViewedDayTimesAvail(["14:00", "14:30", "15:00", "15:30", "16:00", "16:30",]);
 	}
 	function selectTimeslot(time) {
 		setTimeslotSelected(time);
@@ -271,22 +280,21 @@ const BookingDetailsComp = () => {
 
 	}, [persons, addPhotos])
 
-
 	useEffect(() => {
 		// runs when you swap months
 		if (isBookingDetailsValid) {
 			viewedMonthDaysRef.current.map(day => (
-				// check if the day is today
-				day.dataset.isoDate === todayISOdate ? (day.classList.add("today"), day.querySelector('input').checked = true) : day.classList.remove("today"),
+				// check if the day is today but not a sunday
+				day.dataset.isoDate === todayISOdate && new Date(day.dataset.isoDate + timezone).getDay() !== 0 ? (day.classList.add("today"), day.querySelector('input').checked = true) : day.classList.remove("today"),
+				// check if the day is today and is a sunday, then make the next day (monday) selected
+				(day.dataset.isoDate === todayISOdate && new Date(day.dataset.isoDate + timezone).getDay() === 0) ?
+					(document.querySelector(`[data-iso-date="${tomorrowISOdate}"] input`).checked = true, day.classList.add("today")) : day.classList.remove("today"),
 				// check if the day is either a sunday or a previous day (to disable them)
 				new Date(day.dataset.isoDate + timezone).getDay() === 0 || (new Date(day.dataset.isoDate + timezone) < dateObject && day.dataset.isoDate !== todayISOdate) ?
 					(day.classList.add("disabled"), day.querySelector('input').disabled = true, day.querySelector('input').checked = false) :
 					(day.classList.remove("disabled"), day.querySelector('input').disabled = false),
-				// check if today is a sunday, then make the next day (monday) selected
-				day.dataset.isoDate === todayISOdate && new Date(day.dataset.isoDate + timezone).getDay() === 0 &&
-				(document.querySelector(`[data-iso-date="${tomorrowISOdate}"] input`).checked = true),
 				// handle the radio buttons stay checked as you swap through months
-				day.querySelector('input').checked = day.dataset.isoDate === viewedDayISO ? true : false
+				new Date(day.dataset.isoDate + timezone).getDay() !== 0 && (day.querySelector('input').checked = day.dataset.isoDate === viewedDayISO ? true : false)
 			));
 			counter === 0 ? prevBtnRef.current.disabled = true : prevBtnRef.current.disabled = false;
 		}
@@ -294,27 +302,56 @@ const BookingDetailsComp = () => {
 
 	useEffect(() => {
 		// runs when you select a day or swap months
-		if (isBookingDetailsValid) {
+		if (isBookingDetailsValid && viewedDayTimesAvail.length > 0) {
 			viewedDayTimesAvailRef.current[0].querySelector('input').checked = true;
 			setTimeslotSelected(viewedDayTimesAvailRef.current[0].dataset.time);
 		}
 	}, [viewedDayISO, counter, isBookingDetailsValid]);
 
 	useEffect(() => {
-
-		calendarTimeHeight = `${document.querySelector('[data-calendar-time-children-div]').offsetHeight + 2}px`;
+		calendarTimeHeight = `${document.querySelector('[data-calendar-time-children-div]').offsetHeight + 4}px`;
 		document.querySelector('[data-calendar-time-div]').style.setProperty('--height', calendarTimeHeight);
-
 	}, [isBookingDetailsValid, counter, viewedDayTimesAvail]);
 
 	useEffect(() => {
-
 		contactDetailsHeight = `${document.querySelector('[data-contact-details-children-div]').offsetHeight + 2}px`;
 		document.querySelector('[data-contact-details-div]').style.setProperty('--height', contactDetailsHeight);
+	}, [isCalendarTimeValid]);
 
-	});
+	// BACKEND COMMUNICATION
+	//**********************************
 
-	const bookingDetails = {
+	useEffect(() => {
+		serviceParam && serviceObject.forEach(service => {
+			if (service.name === serviceParam) {
+				setServiceQuestionDropdownState(false);
+				setProductQuestionDropdownState(true);
+				setServiceSelected(service.name);
+				document.querySelector('#book-question-service-name__' + service.slug).checked = true;
+
+				service.products.forEach((product, index) => {
+					if (product.name === productParam) {
+						setProductQuestionDropdownState(false);
+						setBookingDetailsDropdownState(true);
+						setProductSelected(product.name);
+						setTimeout(() => {
+							const input = document.querySelector('#book-question-product-name__' + index);
+							input && (input.checked = true);
+						}, 1000)
+					}
+				})
+			}
+		});
+
+		async function initViewDayBooking() {
+			const response = await axios.get(`/api/availability/${viewedDayISO}`);
+			setViewedDayTimesAvail(response.data);
+		}
+		initViewDayBooking();
+	}, []);
+
+	const bookingPacket = {
+		Time: timeslotSelected,
 		Service: serviceSelected,
 		Product: productSelected,
 		Details: persons,
@@ -324,11 +361,6 @@ const BookingDetailsComp = () => {
 			Extra: addPhotos
 		},
 		Total_Cost: totalCost,
-		Timeslot: {
-			Date: viewedDayISO,
-			Time: timeslotSelected,
-			ISO_Datetime: fullBookingISO
-		},
 		Contact: contactDetails
 	}
 
@@ -472,7 +504,7 @@ const BookingDetailsComp = () => {
 				<button className={`book-question-dropdown-bar__wrap ${calendarTimeDropdownVisbility}`}
 					onClick={() => setCalendarTimeDropdownState(prevstate => !prevstate)} data-calendar-time-btn>
 					<div className="book-question-dropdown-bar__text">
-						<strong>Booking:</strong> {isBookingDetailsValid ? fullBookingString : "No selection"}</div>
+						<strong>Booking:</strong> {isBookingDetailsValid && viewedDayTimesAvail.length > 0 ? fullBookingString : "No date selected"}</div>
 					<div className="book-question-dropdown-bar__icon"><i className="fa-solid fa-chevron-down"></i></div>
 				</button>
 				<div className={`book-question-dropdown-options ${calendarTimeDropdownVisbility}`} data-calendar-time-div >
@@ -534,20 +566,24 @@ const BookingDetailsComp = () => {
 											{viewedDayString}
 										</div>
 										<div className="book-timeslot-body__wrap">
-											<div className="book-timeslots__wrap">
-												{
-													viewedDayTimesAvail.map((time, index) => (
-														<div className="book-timeslot-time" key={index} ref={addViewedDayTimeAvailRef} data-time={time}>
-															<input type="radio" name="book-timeslot-time" id={time} tabIndex={calendarTimeDropdownTabIndex}
-																onChange={() => selectTimeslot(time)} />
-															<label htmlFor={time}>{time}</label>
-														</div>
-													))
-												}
-											</div>
-											<div className="book-timeslot-btn__wrap button-btn-primary__wrap">
-												<button onClick={calendarTimeProceedFxn}>Proceed</button>
-											</div>
+											{ viewedDayTimesAvail.length > 0 ?											
+												<>
+													<div className="book-timeslots__wrap">
+															{viewedDayTimesAvail.map((time, index) => (
+																<div className="book-timeslot-time" key={index} ref={addViewedDayTimeAvailRef} data-time={time}>
+																	<input type="radio" name="book-timeslot-time" id={time} tabIndex={calendarTimeDropdownTabIndex}
+																		onChange={() => selectTimeslot(time)} />
+																	<label htmlFor={time}>{time}</label>
+																</div>
+															))}
+													</div>
+													<div className="book-timeslot-btn__wrap button-btn-primary__wrap">
+														<button onClick={calendarTimeProceedFxn}>Proceed</button>
+													</div>
+												</>
+												:
+												<div>There is no available time to book on this day. Please chose a different day.</div>
+											}
 										</div>
 									</div>
 								</div>
@@ -611,7 +647,7 @@ const BookingDetailsComp = () => {
 					</div>
 				</div>
 			</div>
-			{<div><pre><code>{JSON.stringify(bookingDetails, null, 2)}</code></pre></div>}
+			{<div><pre><code>{JSON.stringify(bookingPacket, null, 2)}</code></pre></div>}
 		</>
 	);
 }

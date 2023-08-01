@@ -10,6 +10,7 @@ const serviceObject = [
             starting: 5000,
             increment: 5000,
             dedphotos: 2,
+            searchParams: "/book?service=Studio+Shooting&product=Solo+%281+Person%29"
         }, {
             name: "Duo (2 People)",
             image: "/images/TAN_9628.jpg",
